@@ -55,10 +55,12 @@ coverage.xml
 *.log
 local_settings.py
 db.sqlite3
+data-dev.db
 
 # Flask stuff:
 instance/
 .webassets-cache
+.flaskenv
 
 # Scrapy stuff:
 .scrapy
