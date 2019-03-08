@@ -92,11 +92,15 @@
             {% endif %}
             {% if post.can_comment %}
                 <div id="comment-form">
-                    <form action={{ request.full_path }} method="POST">
+                    <form action={{ request.full_path }} method='POST'>
                         {{ form.csrf_token }}
                         {{ form_filed(form.author, class='form-control', placeholder='Name') }}
                         {{ form_filed(form.email,class='form-control', placeholder='Email') }}
                         {{ form_filed(form.body,class='form-control', placeholder='Message', rows='5') }}
+                        <br>
+                        <div class="control-group">
+                            {{ form.submit(class='btn btn-primary') }}
+                        </div>
                     </form>
                 </div>
             {% else %}

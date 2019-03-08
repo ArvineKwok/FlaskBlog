@@ -7,7 +7,7 @@ from blog.settings import config
 import os
 import click
 from blog.blueprints.blog import blog_bp
-
+import random
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
@@ -22,7 +22,7 @@ def create_app(config_name=None):
     register_commands(app)
     register_blueprints(app)
     register_template_content(app)
-
+    register_template_function(app)
     return app
 
 def register_extensions(app):
@@ -39,6 +39,11 @@ def register_template_content(app):
         admin = Admin.query.first()
         categories = Category.query.order_by(Category.name).all()
         return dict(admin=admin, categories=categories)
+
+def register_template_function(app):
+    @app.template_global()
+    def randint():
+        return random.randint(100,200), random.randint(100,200), random.randint(100,200)
 
 def register_errors(app):
     pass
