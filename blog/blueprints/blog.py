@@ -22,3 +22,7 @@ def show_post(post_id):
     pagination = Comment.query.with_parent(post).order_by(Comment.timestamp.desc()).paginate(page, per_page=per_page)
     comments = pagination.items
     return render_template('blog/post.html', post=post, pagination=pagination, comments=comments, form=comment_form)
+
+@blog_bp.route('/about')
+def about():
+    return render_template('blog/about.html')
