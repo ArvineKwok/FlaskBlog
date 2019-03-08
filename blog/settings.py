@@ -22,7 +22,7 @@ class BaseConfig(object):
 
     BLOG_POST_PER_PAGE = 10
     BLOG_MANAGE_POST_PER_PAGE = 15
-    BLOG_COMMENT_PER_PAGE = 15
+    BLOG_COMMENT_PER_PAGE = 5
 
 class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data-dev.db')

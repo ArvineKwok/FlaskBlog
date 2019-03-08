@@ -1,0 +1,42 @@
+{% macro render_nav_item(endpoint, text) -%}
+    <li class="nav-item {% if request.endpoint and request.endpoint == endpoint %}active{% endif %}">
+        <a class="nav-link" href="{{ url_for(endpoint, **kwargs) }}">{{ text }}</a>
+    </li>
+{%- endmacro %}
+
+{% macro pager(pagination, fragment='') %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination float-left {% if not pagination.has_prev %}d-none{% endif %}">
+            <li class="page-item">
+                <a class="btn btn-primary" href="{{ url_for(request.endpoint, page=pagination.
+                prev_num, **kwargs) + fragment if pagination.has_prev else '#' }}">
+                    <span aria-hidden="true">&larr;</span>Newer
+                </a>
+            </li>
+        </ul>
+        <ul class="pagination float-right {% if not pagination.has_next %}d-none{% endif %}">
+            <li class="page-item">
+                <a class="btn btn-primary" href="{{ url_for(request.endpoint, page=pagination.
+                next_num, **kwargs) + fragment if pagination.has_next else '#' }}">
+                    <span aria-hidden="true">&rarr;</span>Order
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endmacro %}
+
+{% macro form_filed(field) %}
+    <div class="control-group">
+        <div class="form-group floating-label-form-group controls">
+        {{ field.label }}
+        {{ field(**kwargs) }}
+        <p class="help-block text-danger"></p>
+        </div>
+    </div>
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <small class="error">{{ error }}</small>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+

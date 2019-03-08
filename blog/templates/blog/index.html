@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pager %}
-
+{% from 'marco.html' import pager %}
 {% block title %}Home{% endblock title %}
 
 {% block content %}
@@ -22,12 +22,10 @@
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
                 {% include 'blog/_posts.html' %}
+                {% if posts %}
+                    <div class="page-footer">{{ pager(pagination) }}</div>
+                {% endif %}
             </div>
-            {% if posts %}
-                <div class="clearfix">
-                    <div class="page-footer">{{ render_pager(pagination) }}</div>
-                </div>
-            {% endif %}
         </div>
     </div>
 {% endblock content %}

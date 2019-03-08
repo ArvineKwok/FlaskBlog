@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'marco.html' import pager %}
+{% from 'marco.html' import form_filed %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <header class="masthead" style="background-image: url({{ url_for('static', filename='img/post-bg.jpg') }})">
+        <div class="overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <div class="post-heading">
+                            <h1>{{ post.title }}</h1>
+                            <span class="meta">Posted by
+                                <a href="#">{{ admin.name }}</a> on {{ moment(post.timestamp).format("LL") }}<br/>
+                                Category: <a href="#">{{ post.category.name }}</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </header>
+    <article>
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                {{ post.body|safe }}
+                <hr>
+            </div>
+          </div>
+        </div>
+    </article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="comments" id="comments">
+                    <h3>{{ pagination.total }} Comments
+                        <small>
+                            <a href="{{ url_for('.show_post', post_id=post.id, page=pagination.pages or 1) }}#comments">Earliest</a>
+                        </small>
+                    </h3>
+                    {% if comments %}
+                        <ul class="list-group">
+                            {% for comment in comments %}
+                                <li class="list-group-item list-group-item-action flex-column">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-auto">
+                                            {% if comment.from_admin %}
+                                                {{ admin.name }}
+                                            {% else %}
+                                                {{ comment.author }}
+                                            {% endif %}
+                                            {% if comment.from_admin %}
+                                                <span class="badge badge-primary">Author</span>
+                                            {% endif %}
+                                            {% if comment.replied %}
+                                                <span class="badge badge-light">Reply</span>
+                                            {% endif %}
+                                        </h5>
+                                        <small data-toggle="tooltip" data-placement="top" data-delay="500"
+                                               data-timestamp="{{ comment.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
+                                            {{ moment(comment.timestamp).fromNow() }}
+                                        </small>
+                                    </div>
+                                    {% if comment.replied %}
+                                        <p class="alert alert-dark reply-body">{{ comment.replied.author }}:
+                                            <br>{{ comment.replied.body }}
+                                        </p>
+                                    {% endif %}
+                                    <p class="mb-auto">{{ comment.body }}</p>
+                                    <div class="float-right">
+                                        <a href="#">Reply</a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="tip"><h5>No comments.</h5></div>
+                    {% endif %}
+                </div>
+            {% if comments %}
+                {{ render_pagination(pagination, fragment='#comments') }}
+            {% endif %}
+            {% if request.args.get('reply') %}
+                <div class="alert alert-dark">
+                    Reply to <strong>{{ request.args.get('author') }}</strong>:
+                    <a href="{{ url_for('.show_post', post_id=post.id) }}">Cancel</a>
+                </div>
+            {% endif %}
+            {% if post.can_comment %}
+                <div id="comment-form">
+                    <form action={{ request.full_path }} method="POST">
+                        {{ form.csrf_token }}
+                        {{ form_filed(form.author, class='form-control', placeholder='Name') }}
+                        {{ form_filed(form.email,class='form-control', placeholder='Email') }}
+                        {{ form_filed(form.body,class='form-control', placeholder='Message', rows='5') }}
+                    </form>
+                </div>
+            {% else %}
+                <div class="tip"><h5>Comment disabled.</h5></div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
