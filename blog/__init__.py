@@ -2,7 +2,7 @@
 from flask import Flask
 
 from blog.extensions import db, bootstrap, moment, login_manager, ckeditor, csrf
-from blog.models import Admin, Category
+from blog.models import Admin, Category, Comment
 from blog.settings import config
 import os
 import click
@@ -10,6 +10,7 @@ from blog.blueprints.blog import blog_bp
 from blog.blueprints.auth import auth_bp
 from blog.blueprints.admin import admin_bp
 import random
+from flask_login import current_user
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
@@ -46,7 +47,11 @@ def register_template_content(app):
     def make_template_context():
         admin = Admin.query.first()
         categories = Category.query.order_by(Category.name).all()
-        return dict(admin=admin, categories=categories)
+        if current_user.is_authenticated:
+            unread_comments = Comment.query.filter_by(reviewed=False).count()
+        else:
+            unread_comments = None
+        return dict(admin=admin, categories=categories, unread_comments=unread_comments)
 
 def register_template_function(app):
     @app.template_global()

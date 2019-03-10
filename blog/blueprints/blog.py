@@ -69,3 +69,8 @@ def reply_comment(comment_id):
     return redirect(
         url_for('.show_post', post_id=comment.post_id, reply=comment_id, author=comment.author) + '#comment-form')
 
+@blog_bp.route('/category/<int:category_id>')
+def show_category(category_id):
+    category = Category.query.get_or_404(category_id)
+    posts = Post.query.with_parent(category).order_by(Post.timestamp.desc())
+    return render_template('blog/show_categroy.html', category=category, posts=posts)

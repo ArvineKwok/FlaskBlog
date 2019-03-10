@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Category{% endblock %}
+{% block content %}
+<header class="masthead" style="background-image: url({{ url_for('static',filename='img/post-sample-image.jpg') }})">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="page-heading">
+                    <h1>Category: </h1>
+                    <h2>{{ category.name }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-md-10 mx-auto">
+            <div class="one-tag-list">
+                <span class="fa fa-tag listing-seperator" id="{{ category.name }}">
+                    {{ category.name }}
+                </span>
+                {% for post in posts %}
+                    <div class="post-preview">
+                        <a href="{{ url_for('.show_post', post_id=post.id) }}">
+                            <h2 class="post-title">{{ post.title }}
+                            </h2>
+                        </a>
+                        <p class="post-meta">{{ moment(post.timestamp).format('LL') }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
