@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
 
-from blog.extensions import db, bootstrap, moment
+from blog.extensions import db, bootstrap, moment, login_manager, ckeditor, csrf
 from blog.models import Admin, Category
 from blog.settings import config
 import os
 import click
 from blog.blueprints.blog import blog_bp
+from blog.blueprints.auth import auth_bp
+from blog.blueprints.admin import admin_bp
 import random
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -29,9 +31,15 @@ def register_extensions(app):
     db.init_app(app)
     bootstrap.init_app(app)
     moment.init_app(app)
+    login_manager.init_app(app)
+    ckeditor.init_app(app)
+    csrf.init_app(app)
+
 
 def register_blueprints(app):
     app.register_blueprint(blog_bp)
+    app.register_blueprint(admin_bp, url_prefix='/admin')
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
 def register_template_content(app):
     @app.context_processor

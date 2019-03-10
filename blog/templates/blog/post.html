@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
-{% from 'marco.html' import pager %}
-{% from 'marco.html' import form_filed %}
-
+{% from 'macro.html' import pager %}
+{% from 'macro.html' import form_filed %}
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
@@ -72,7 +71,7 @@
                                     {% endif %}
                                     <p class="mb-auto">{{ comment.body }}</p>
                                     <div class="float-right">
-                                        <a href="#">Reply</a>
+                                        <a href="{{ url_for('.reply_comment', comment_id=comment.id) }}">Reply</a>
                                     </div>
                                 </li>
                             {% endfor %}
@@ -87,11 +86,13 @@
             {% if request.args.get('reply') %}
                 <div class="alert alert-dark">
                     Reply to <strong>{{ request.args.get('author') }}</strong>:
-                    <a href="{{ url_for('.show_post', post_id=post.id) }}">Cancel</a>
+                    <a class="float-right" href="{{ url_for('.show_post', post_id=post.id) }}">Cancel</a>
                 </div>
             {% endif %}
+                <hr>
             {% if post.can_comment %}
                 <div id="comment-form">
+                    <small><strong>&downarrow;&downarrow;Please leave your comment below!&downarrow;&downarrow;</strong></small>
                     <form action={{ request.full_path }} method='POST'>
                         {{ form.csrf_token }}
                         {{ form_filed(form.author, class='form-control', placeholder='Name') }}

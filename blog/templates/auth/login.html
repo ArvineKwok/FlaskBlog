@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% from 'macro.html' import form_filed %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<header class="masthead" style="background-image: url({{ url_for('static', filename='img/home-bg.jpg') }})">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h1>LOGIN</h1>
+                    <span class="subheading">Welcome back.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <form action={{ request.full_path }} method='POST'>
+                {{ form.csrf_token }}
+                {{ form_filed(form.username, class='form-control', placeholder='Username') }}
+                {{ form_filed(form.password, class='form-control', placeholder='Password') }}
+                <br>
+                {{ form.remember.label }}
+                {{ form.remember }}
+                <br>
+                <div class="control-group">
+                    {{ form.submit(class='btn btn-primary') }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
