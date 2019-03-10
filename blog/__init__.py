@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
 
-from blog.extensions import db, bootstrap, moment
+from blog.extensions import db, bootstrap, moment, login_manager, ckeditor, csrf
 from blog.models import Admin, Category
 from blog.settings import config
 import os
 import click
 from blog.blueprints.blog import blog_bp
-
+from blog.blueprints.auth import auth_bp
+from blog.blueprints.admin import admin_bp
+import random
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
@@ -22,16 +24,22 @@ def create_app(config_name=None):
     register_commands(app)
     register_blueprints(app)
     register_template_content(app)
-
+    register_template_function(app)
     return app
 
 def register_extensions(app):
     db.init_app(app)
     bootstrap.init_app(app)
     moment.init_app(app)
+    login_manager.init_app(app)
+    ckeditor.init_app(app)
+    csrf.init_app(app)
+
 
 def register_blueprints(app):
     app.register_blueprint(blog_bp)
+    app.register_blueprint(admin_bp, url_prefix='/admin')
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
 def register_template_content(app):
     @app.context_processor
@@ -39,6 +47,11 @@ def register_template_content(app):
         admin = Admin.query.first()
         categories = Category.query.order_by(Category.name).all()
         return dict(admin=admin, categories=categories)
+
+def register_template_function(app):
+    @app.template_global()
+    def randint():
+        return random.randint(100,200), random.randint(100,200), random.randint(100,200)
 
 def register_errors(app):
     pass

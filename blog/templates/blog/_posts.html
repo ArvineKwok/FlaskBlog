@@ -11,8 +11,7 @@
                 <small><a href="{{ url_for('.show_post', post_id=post.id) }}">Read more</a></small>
             </p>
             <p class="post-meta">Posted by
-                <a href="#">{{ admin.name }}</a> on {{ moment(post.timestamp).format("LL") }}
-
+                <a href="#">{{ admin.name }}</a> on {{ moment(post.timestamp).format("LL") }}<br>
             Comments: <a href="#">{{ post.comments|length }}</a>&nbsp;&nbsp;
             Category: <a href="#">{{ post.category.name }}</a>
             </p>

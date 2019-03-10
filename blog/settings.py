@@ -24,6 +24,8 @@ class BaseConfig(object):
     BLOG_MANAGE_POST_PER_PAGE = 15
     BLOG_COMMENT_PER_PAGE = 5
 
+    BLUELOG_EMAIL = 'arvinekwok@163.com'
+
 class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data-dev.db')
 
