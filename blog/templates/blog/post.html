@@ -71,7 +71,17 @@
                                     {% endif %}
                                     <p class="mb-auto">{{ comment.body }}</p>
                                     <div class="float-right">
-                                        <a href="{{ url_for('.reply_comment', comment_id=comment.id) }}">Reply</a>
+                                        <a href="{{ url_for('.reply_comment', comment_id=comment.id) }}"
+                                           class="btn btn-primary btn-sm">Reply</a>
+                                        {% if current_user.is_authenticated %}
+                                            <a class="btn btn-primary btn-sm" href="mailto:{{ comment.email }}">Email</a>
+                                            <form action="{{ url_for('admin.delete_comment', comment_id=comment.id, next=request.full_path) }}"
+                                                    class="inline" method="post">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Are you sure?');">Delete</button>
+                                            </form>
+                                        {% endif %}
                                     </div>
                                 </li>
                             {% endfor %}

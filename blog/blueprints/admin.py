@@ -47,7 +47,6 @@ def manage_category():
 def edit_category(category_id):
     category = Category.query.get_or_404(category_id)
     form = CategoryForm()
-    form.name.data = category.name
     if category.id == 1:
         flash('You can not edit the default category.', 'warning')
         return redirect(url_for('blog.index'))
@@ -56,6 +55,7 @@ def edit_category(category_id):
         db.session.commit()
         flash('Category updated.', 'success')
         return redirect(url_for('.manage_category'))
+    form.name.data = category.name
     return render_template('admin/edit_category.html', form=form)
 
 @admin_bp.route('/category/delete/<int:category_id>', methods=['POST'])
@@ -120,7 +120,7 @@ def manage_comment():
 
 @admin_bp.route('/comment/delete/<int:comment_id>', methods=['POST'])
 def delete_comment(comment_id):
-    comment = Post.query.get_or_404(comment_id)
+    comment = Comment.query.get_or_404(comment_id)
     db.session.delete(comment)
     db.session.commit()
     flash('Comment deleted.', 'success')
@@ -128,7 +128,7 @@ def delete_comment(comment_id):
 
 @admin_bp.route('/comment/approve/<int:comment_id>', methods=['POST'])
 def approve_comment(comment_id):
-    comment = Post.query.get_or_404(comment_id)
+    comment = Comment.query.get_or_404(comment_id)
     comment.reviewed = True
     db.session.commit()
     flash('Comment approved.', 'success')
