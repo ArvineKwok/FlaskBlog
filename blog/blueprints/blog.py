@@ -21,7 +21,7 @@ def show_post(post_id):
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLOG_COMMENT_PER_PAGE']
 
-    pagination = Comment.query.with_parent(post).order_by(Comment.timestamp.desc()).paginate(page, per_page=per_page)
+    pagination = Comment.query.with_parent(post).filter_by(reviewed=True).order_by(Comment.timestamp.desc()).paginate(page, per_page=per_page)
     comments = pagination.items
     if current_user.is_authenticated:
         form = AdminCommentForm()
