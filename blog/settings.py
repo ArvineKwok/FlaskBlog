@@ -37,7 +37,7 @@ class TestingConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', prefix + os.path.join(basedir, 'data.db'))
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_  URL', prefix + os.path.join(basedir, 'data.db'))
 
 config = {
     'development': DevelopmentConfig,

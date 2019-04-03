@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, current_app, request
 from flask_login import login_required
-from blog.forms import PostForm, CategoryForm
-from blog.models import Post, Category, Comment
+from blog.forms import PostForm, CategoryForm, SettingForm
+from blog.models import Post, Category, Comment, Admin
 from blog.extensions import db
 from blog.utils import redirect_back
 
@@ -132,4 +132,38 @@ def approve_comment(comment_id):
     comment.reviewed = True
     db.session.commit()
     flash('Comment approved.', 'success')
+    return redirect_back()
+
+
+@admin_bp.route('/setting', methods=['GET', 'POST'])
+@login_required
+def setting():
+    admin = Admin.query.first()
+    form = SettingForm()
+    if form.validate_on_submit():
+        admin.name = form.name.data
+        admin.blog_title = form.blog_title.data
+        admin.blog_sub_title = form.blog_sub_title.data
+        admin.about = form.about.data
+        db.session.add(admin)
+        db.session.commit()
+        return redirect(url_for('blog.index'))
+    form.name.data = admin.name
+    form.blog_title.data = admin.blog_title
+    form.blog_sub_title.data = admin.blog_sub_title
+    form.about.data = admin.about
+    return render_template('admin/setting.html', form=form)
+
+
+@admin_bp.route('/post/<int:post_id>/set-comment', methods=['POST'])
+@login_required
+def set_comment(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.can_comment:
+        post.can_comment = False
+        flash('Comment disabled.', 'success')
+    else:
+        post.can_comment = True
+        flash('Comment enabled.', 'success')
+    db.session.commit()
     return redirect_back()

@@ -15,6 +15,7 @@ flask-login = "*"
 flask-wtf = "*"
 python-dotenv = "*"
 flask-ckeditor = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.6"
