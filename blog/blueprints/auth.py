@@ -6,12 +6,14 @@ from blog.models import Admin
 
 auth_bp = Blueprint('auth', __name__)
 
+
 @auth_bp.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('Logout success.', 'info')
     return redirect_back()
+
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -27,9 +29,10 @@ def login():
         if admin:
             if username == admin.username and admin.validate_password(password):
                 login_user(admin, remember)
-                flash("Welcome back.",'info')
+                flash("Welcome back.", 'info')
                 return redirect_back()
             flash('Invalid username or password.', 'warning')
         else:
             flash('No account.', 'warning')
     return render_template('auth/login.html', form=form)
+
